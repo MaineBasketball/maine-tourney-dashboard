@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Game {
+  id          String   @id @default(cuid())
+  source      String
+  gender      String
+  className   String
+  region      String?
+  round       String?
+  venue       String?
+  city        String?
+  startTime   DateTime?
+  homeTeam    String?
+  awayTeam    String?
+  homeSeed    Int?
+  awaySeed    Int?
+  status      String   @default("scheduled")
+  fingerprint String
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+
+  @@index([gender, className])
+  @@index([venue])
+  @@index([startTime])
+}
+
+model ChangeEvent {
+  id        String   @id @default(cuid())
+  gameId    String?
+  gender    String
+  className String
+  venue     String?
+  summary   String
+  before    Json?
+  after     Json?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([venue])
+}
+
+model Subscriber {
+  id        String  @id @default(cuid())
+  email     String
+  phone     String
+  isEnabled Boolean @default(true)
+  createdAt DateTime @default(now())
+}
+
